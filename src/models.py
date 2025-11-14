@@ -1,0 +1,83 @@
+import datetime
+import sqlite3
+
+
+SCHEDULE = {
+    1: {
+        "start": "8:00",
+        "end": "9:35"
+    },
+    2: {
+        "start": "9:45",
+        "end": "11:20"
+    },
+    3: {
+        "start": "11:35",
+        "end": "13:10"
+    },
+    4: {
+        "start": "13:40",
+        "end": "15:15"
+    },
+    5: {
+        "start": "15:25",
+        "end": "17:00"
+    },
+    6: {
+        "start": "17:10",
+        "end": "18:45"
+    }
+}
+
+
+class Subject:
+    """
+    Класс, описывающий дисциплину:
+        name: Название дисциплины
+        teacher_name: Имя преподавателя
+        sj_type: Тип занятия (лекция/практика/семинар)
+    """
+    def __init__(self, name, teacher_name, sj_type):
+        self.name = name
+        self.teacher_name = teacher_name
+        self.sj_type = sj_type
+
+
+class Day:
+    def __init__(self, id_week):
+        self.id_week = id_week
+
+
+class LessonSlot:
+    """
+    Класс, представляющий пару и её связи;
+        id_day: Идентификатор дня, к которому относится пара
+        id_subject: Идентификатор дисциплины, которая будет проходить
+        lesson_num: Номер пары (1,2,3,4,5)
+        comment: Комментарии к паре (изменения, напоминания)
+        auditory: Номер аудитории
+    """
+    def __init__(self, id_lesson, id_day, id_subject, lesson_num, comment, auditory):
+        self.id_lesson = id_lesson
+        self.id_day = id_day
+        self.id_subject = id_subject
+        self.lesson_num = lesson_num
+        self.comment = comment
+        self.auditory = auditory
+        self.lesson_start = SCHEDULE[lesson_num]["start"]
+        self.lesson_end = SCHEDULE[lesson_num]["end"]
+
+
+class Week:
+    """
+    Класс, представляющий неделю
+        is_even: Чётная/нечётная неделя
+        start: Дата понедельника
+        end: Дата воскресенья
+    """
+    def __init__(self, id_week, is_even, start, end):
+        self.id_week = id_week
+        self.is_even = is_even
+        self.start = start
+        self.end = end
+
