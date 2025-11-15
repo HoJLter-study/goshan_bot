@@ -29,6 +29,21 @@ SCHEDULE = {
     }
 }
 
+DATABASE_PATH = "data/database.db"
+
+class Database:
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance.instance = sqlite3.connect(DATABASE_PATH)
+        return cls._instance
+
+
+
+
+
 
 class Subject:
     """
@@ -52,7 +67,7 @@ class LessonSlot:
     """
     Класс, представляющий пару и её связи;
         id_day: Идентификатор дня, к которому относится пара
-        id_subject: Идентификатор дисциплины, которая будет проходить
+        id_subject: Идентификат22ор дисциплины, которая будет проходить
         lesson_num: Номер пары (1,2,3,4,5)
         comment: Комментарии к паре (изменения, напоминания)
         auditory: Номер аудитории
@@ -81,3 +96,6 @@ class Week:
         self.start = start
         self.end = end
 
+
+db = Database()
+print(db.instance.execute())
