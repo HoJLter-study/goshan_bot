@@ -1,5 +1,6 @@
 --- DDL STARTS
 DROP TABLE IF EXISTS lessons_slots;
+DROP TABLE IF EXISTS lessons_numbers;
 DROP TABLE IF EXISTS subjects;
 DROP TABLE IF EXISTS weeks;
 DROP TABLE IF EXISTS users;
@@ -20,7 +21,7 @@ CREATE TABLE subjects (
     type            TEXT
 );
 
-CREATE TABLE lesson_numbers
+CREATE TABLE lessons_numbers
 (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     lesson_start    TEXT,
@@ -39,7 +40,7 @@ CREATE TABLE lessons_slots
 
     FOREIGN KEY (id_subject) REFERENCES subjects(id)
         ON UPDATE CASCADE,
-    FOREIGN KEY (id_lesson_num) REFERENCES lesson_numbers(id)
+    FOREIGN KEY (id_lesson_num) REFERENCES lessons_numbers(id)
         ON UPDATE CASCADE
 );
 
@@ -51,6 +52,7 @@ CREATE TABLE users(
 
 
 --- DML STARTS
+--- Список дисциплин и преподавателей
 INSERT INTO subjects (id, name, teacher_name, type) VALUES
     (1, 'Основы WEB-технологий', 'Курушин Евгений Андреевич', 'лекция'),
     (2, 'Основы WEB-технологий', 'Сытин Александр Александрович', 'практика'),
@@ -73,11 +75,15 @@ INSERT INTO subjects (id, name, teacher_name, type) VALUES
     (19, 'Английский язык', 'Проскурякова Майя Павловна', 'практика'),
     (20, 'Элективный курс по физической культуре и спорту', 'Должункова Инна Петровна', 'лекция');
 
-
-INSERT INTO lesson_numbers (id, lesson_start, lesson_end) VALUES
+--- Расписание пар
+INSERT INTO lessons_numbers (id, lesson_start, lesson_end) VALUES
     (1, '8:00', '9:35'),
     (2, '9:45', '11:20'),
     (3, '11:35', '13:10'),
     (4, '13:40', '15:15'),
     (5, '15:25', '17:00'),
     (6, '17:10', '18:45');
+
+--- Первая неделя
+INSERT INTO weeks(is_even, week_start, week_end) VALUES
+    (false, '01.09.2025', '07.09.2025')
