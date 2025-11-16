@@ -1,48 +1,40 @@
 import datetime
+import os.path
 import sqlite3
 
 
-SCHEDULE = {
-    1: {
-        "start": "8:00",
-        "end": "9:35"
-    },
-    2: {
-        "start": "9:45",
-        "end": "11:20"
-    },
-    3: {
-        "start": "11:35",
-        "end": "13:10"
-    },
-    4: {
-        "start": "13:40",
-        "end": "15:15"
-    },
-    5: {
-        "start": "15:25",
-        "end": "17:00"
-    },
-    6: {
-        "start": "17:10",
-        "end": "18:45"
-    }
-}
-
 DATABASE_PATH = "data/database.db"
+DATABASE_STRUCTURE = "data/db_structure.sql"
+
 
 class Database:
+    """
+    Класс-синглтон, описывающий базу данных.
+    При первом запуске инициализирует базу данных
+    """
     _instance = None
 
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            cls._instance.instance = sqlite3.connect(DATABASE_PATH)
+            cls._instance._init_database()
         return cls._instance
 
+    def _init_database(self):
+        is_db_exists = os.path.exists(DATABASE_PATH)
+        self.__conn = sqlite3.connect(DATABASE_PATH)
 
+        if not is_db_exists:
+            with open(DATABASE_STRUCTURE, "r") as file:
+                script = file.read()
+                self.__conn.executescript(script)
 
-
+    def get_last_week(self):
+        res = self.__conn.execute(
+            """SELECT * FROM  main.weeks
+               ORDER BY id DESC
+                LIMIT 1;""")
+        return res.fetchall()
 
 
 class Subject:
@@ -67,7 +59,7 @@ class LessonSlot:
     """
     Класс, представляющий пару и её связи;
         id_day: Идентификатор дня, к которому относится пара
-        id_subject: Идентификат22ор дисциплины, которая будет проходить
+        id_subject: Идентификатор дисциплины, которая будет проходить в этом слоте
         lesson_num: Номер пары (1,2,3,4,5)
         comment: Комментарии к паре (изменения, напоминания)
         auditory: Номер аудитории
@@ -98,4 +90,4 @@ class Week:
 
 
 db = Database()
-print(db.instance.execute())
+print(db.get_last_week())
